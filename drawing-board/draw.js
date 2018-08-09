@@ -1,11 +1,11 @@
-var canvasX = document.getElementById('canvas');
-var context = canvasX.getContext('2d');
-var colorX = null;
+
+var canvasX = document.getElementById('canvas'),
+    context = canvasX.getContext('2d'),
+    colorX = null;
 
 setCanvasSize(canvasX);//设置画布
 
 listenCanvasChange(canvasX);//基本画图动作
-
 
 //工具函数
 function setCanvasSize(tag) { //制作画布
@@ -32,7 +32,7 @@ function listenCanvasChange(canvas) {//画图的配置
 
     li[0].onclick = function () {
         colorX = "red";
-        for (var index = 0;  index < li.length; index++) {
+        for (var index = 0; index < li.length; index++) {
             li[index].classList.remove('active');
         }
         this.classList.add('active');
@@ -41,7 +41,7 @@ function listenCanvasChange(canvas) {//画图的配置
     }
     li[1].onclick = function () {
         colorX = "black";
-        for (var index = 0;  index < li.length; index++) {
+        for (var index = 0; index < li.length; index++) {
             li[index].classList.remove('active');
         }
         this.classList.add('active');
@@ -50,45 +50,43 @@ function listenCanvasChange(canvas) {//画图的配置
     }
     li[2].onclick = function () {
         colorX = "green";
-        for (var index = 0;  index < li.length; index++) {
+        for (var index = 0; index < li.length; index++) {
             li[index].classList.remove('active');
         }
         this.classList.add('active');
         context.fillStyle = 'green'
         context.strokeStyle = 'green'
-        
+
     }
     li[3].onclick = function () {
         colorX = "blue";
-        for (var index = 0;  index < li.length; index++) {
+        for (var index = 0; index < li.length; index++) {
             li[index].classList.remove('active');
         }
         this.classList.add('active')
         context.fillStyle = 'blue'
         context.strokeStyle = 'blue'
     }
-
-    reset[0].onclick = function () {
-        context.clearRect(0, 0, canvas.width, canvas.height);  
-    };
-
-    download[0].onclick = function () {
-        var url = canvas.toDataURL("image/png")
+    download[0].onclick = function () { 
         var a = document.createElement('a')
         document.body.appendChild(a)
-        a.href = url
-        a.download = '图片'
+        a.href =  canvasToImage('white')
+        a.download = '画作'
         a.target = '_blank'
         a.click()
     };
-   
-    
+
+    reset[0].onclick = function () {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+
     pen[0].onclick = function () {
-        switcher = true; 
+        switcher = true;
         pen[0].classList.add('active')
         eraser[0].classList.remove('active')
     };
-    
+
     eraser[0].onclick = function () {
         switcher = false;
         eraser[0].classList.add('active');
@@ -98,7 +96,7 @@ function listenCanvasChange(canvas) {//画图的配置
         if (lineWidth === 2.5) {
             jiacu[0].classList.add('active');
             lineWidth = 5
-        }else{
+        } else {
             jiacu[0].classList.remove('active');
             lineWidth = 2.5;
         }
@@ -127,7 +125,7 @@ function listenCanvasChange(canvas) {//画图的配置
             } else {
                 if (onOff) {
                     drawArc(x, y, colorX, lineWidth)
-                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y,lineWidth*2)
+                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y, lineWidth * 2)
                 }
             }
             lastPoint = newPoint;
@@ -156,7 +154,7 @@ function listenCanvasChange(canvas) {//画图的配置
             } else {
                 if (onOff) {
                     drawArc(x, y, colorX, lineWidth)
-                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y,lineWidth*2)
+                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y, lineWidth * 2)
                 }
             }
             lastPoint = newPoint;
@@ -173,11 +171,53 @@ function drawArc(x, y, color, size) {//画圆
     context.fill();
 }
 
-function drawLine(x1, y1, x2, y2,width) {//画直线
+function drawLine(x1, y1, x2, y2, width) {//画直线
     context.beginPath();
     context.moveTo(x1, y1);//起点
     context.lineWidth = width;
     context.lineTo(x2, y2);//终点
     context.stroke();
     context.closePath();
+}
+
+function canvasToImage(backgroundColor) {//canvas转64解决
+
+    var w = canvasX.width;
+    var h = canvasX.height;
+
+    var data;
+
+    if (backgroundColor) {
+
+        data = context.getImageData(0, 0, w, h);
+
+
+        var compositeOperation = context.globalCompositeOperation;
+
+
+        context.globalCompositeOperation = "destination-over";
+
+
+        context.fillStyle = backgroundColor;
+
+
+        context.fillRect(0, 0, w, h);
+    }
+
+
+    var imageData = this.canvasX.toDataURL("image/png");
+
+    if (backgroundColor) {
+
+        context.clearRect(0, 0, w, h);
+
+
+        context.putImageData(data, 0, 0);
+
+
+        context.globalCompositeOperation = compositeOperation;
+    }
+
+
+    return imageData;
 }
