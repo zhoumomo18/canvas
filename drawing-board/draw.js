@@ -77,7 +77,7 @@ function listenCanvasChange(canvas) {//画图的配置
         var a = document.createElement('a')
         document.body.appendChild(a)
         a.href = url
-        a.download = '我的画儿'
+        a.download = '图片'
         a.target = '_blank'
         a.click()
     };
