@@ -1,7 +1,3 @@
-// document.body.ontouchstart= function(event){
-//     event.preventDefault();
-// }
-
 var canvasX = document.getElementById('canvas'),
     context = canvasX.getContext('2d'),
     colorX = null;
