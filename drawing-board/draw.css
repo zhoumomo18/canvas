@@ -4,8 +4,10 @@
 }
 
 #canvas {
-    background: #fff;
     display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .icon {
