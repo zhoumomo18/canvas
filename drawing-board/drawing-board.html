@@ -3,126 +3,55 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>画板</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        #canvas {
-            background: green;
-            display: block;
-        }
-
-        .tool {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-        }
-
-        #brush {
-            display: none;
+    <script src="https://at.alicdn.com/t/font_784172_jo0lzf8h9bc.js"></script>
+    <link rel="stylesheet" href="draw.css">
+    <style type="text/css">
+        .icon {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
         }
     </style>
+    <title>画板</title>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
     <div class="tool">
-        <button id="eraser">橡皮擦</button>
-        <button id="brush">画笔</button>
+        <div class="top">
+            <svg class="icon reset">
+                <use  xlink:href="#icon-zhongzhi"></use>
+            </svg>
+            <svg class="icon download">
+                <use xlink:href="#icon-baocundaobendi"></use>
+            </svg>
+        </div>
+        <div class="bottom">
+            <svg class="icon  eraser">
+                <use xlink:href="#icon-eraser"></use>
+            </svg>
+            <svg class="icon pen">
+                <use xlink:href="#icon-pen"></use>
+            </svg>
+            <svg class="icon jiacu">
+                <use xlink:href="#icon-jiacu1"></use>
+            </svg>
+        </div>
+
+
     </div>
-
+    <ol class="color">
+        <li class="red"></li>
+        <li class="black"></li>
+        <li class="green"></li>
+        <li class="blue"></li>
+    </ol>
+    <script src="./draw.js"></script>
 </body>
-<script>
-    var canvasX = document.getElementById('canvas');
-    var context = canvasX.getContext('2d');
-
-    setCanvasSize(canvasX);//设置画布
-
-    listenCanvasChange(canvasX);//基本画图动作
-
-
-    //工具函数
-    function setCanvasSize(tag) { //制作画布
-        var pageWidth = document.documentElement.clientWidth;
-        var pageHeight = document.documentElement.clientHeight;
-        tag.height = pageHeight;
-        tag.width = pageWidth;
-        window.onresize = function () {//当视口改变更新宽高
-            setCanvasSize(canvasX);
-        }
-    }
-
-    function listenCanvasChange(canvas) {//画图的动作
-        var onOff = false;
-        var eraser = false;
-        var btn = document.getElementById('eraser');
-        var btn2 = document.getElementById('brush');
-        var lastPoint = { x: undefined, y: undefined };
-
-        btn.onclick = function () {
-            eraser = true;
-            btn2.style.display = 'inline-block';
-            event.target.style.display = 'none'
-        }
-        btn2.onclick = function (event) {
-            eraser = false;
-            btn.style.display = 'inline-    block';
-            event.target.style.display = 'none'
-        }
-
-        canvas.onmousedown = function (event) {
-            var x = event.clientX;
-            var y = event.clientY;
-            lastPoint = { x: x, y: y };
-            if (eraser) {
-                onOff = true;
-                context.clearRect(x, y, 20, 20)
-            } else {
-                onOff = true;
-                drawArc(x, y, 'black', 5)
-            }
-        }
-
-        canvas.onmousemove = function (event) {
-            var x = event.clientX;
-            var y = event.clientY;
-            var newPoint = { x: x, y: y }
-
-            if (eraser) {
-                if (onOff) context.clearRect(x - 10, y - 10, 20, 20);
-            } else {
-                if (onOff) {
-                    drawArc(x, y, 'black', 5)
-                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
-                }
-            }
-            lastPoint = newPoint;
-        }
-
-        canvas.onmouseup = function () { onOff = false; }
-    }
-
-    function drawArc(x, y, color, size) {//画圆
-        context.beginPath();
-        context.fillStyle = color;
-        context.arc(x, y, size, 0, 2 * Math.PI);
-        context.fill();
-    }
-
-    function drawLine(x1, y1, x2, y2) {//画直线
-        context.beginPath();
-        context.moveTo(x1, y1);//起点
-        context.lineWidth = 10;
-        context.lineTo(x2, y2);//终点
-        context.stroke();
-        context.closePath();
-    }
-
-</script>
 
 </html>
